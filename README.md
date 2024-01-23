@@ -1,3 +1,12 @@
+extansion a mettre (on verra)
+argon2 (pour hashage de mdp)
+vite (car utiliser de base dans le projet)
+chakra (car utiliser de base dans le projet)
+netigly (pour l'hebergement)
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
