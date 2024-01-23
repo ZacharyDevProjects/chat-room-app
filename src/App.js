@@ -1,18 +1,11 @@
-import "./.css/header.css";
-import "./.css/footer.css";
-
+import Header from "./layout/header";
+import Footer from "./layout/footer";
 function App() {
   return (
-    <div>
-      <header class="header">
-        <p>la je mettrai un logo</p>
-        <p>une belle histoire sur son point de depart</p>
-        <p>la je mettrai le login</p>
-      </header>
-      <footer class="footer">
-        <p>test</p>
-      </footer>
-    </div>
+    <>
+      <Header />
+      <Footer />
+    </>
   );
 }
 
