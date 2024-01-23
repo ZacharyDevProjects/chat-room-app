@@ -1,8 +1,13 @@
 extansion a mettre (on verra)
+
 argon2 (pour hashage de mdp)
+
 vite (car utiliser de base dans le projet)
+
 chakra (car utiliser de base dans le projet)
+
 netigly (pour l'hebergement)
+
 
 
 
