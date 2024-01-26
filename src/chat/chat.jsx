@@ -7,6 +7,18 @@ export default function Chat() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    function setCoockies() {
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 7);
+      const expirationDateString = expirationDate.toUTCString();
+      if (document.cookie === null) {
+        console.log("il n'y a pas de coockie encore");
+      } else {
+        document.cookie = `Salut c'est moi le cookies=probablement l'id; SameSite=None; Secure; expires=${expirationDateString}`;
+      }
+      console.log(document.cookie);
+    }
+    setCoockies();
     async function fetchPostData() {
       try {
         const { data, error } = await supabase.from("post").select("message");
@@ -28,7 +40,9 @@ export default function Chat() {
       <Box bg="white" p="5" overflow="auto" borderRadius="10px">
         {data ? (
           data.map((item, index) => (
-          <Box key={index} bgColor={"#E5E5E5"} mt={"20px"}>{data[index].message}</Box>
+            <Box key={index} bgColor={"#E5E5E5"} mt={"20px"}>
+              {data[index].message}
+            </Box>
           ))
         ) : (
           <p>{error ? `Erreur: ${error}` : "Chargement en cours..."}</p>
