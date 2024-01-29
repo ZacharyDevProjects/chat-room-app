@@ -4,7 +4,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, "../client/build")));
+app.use(express.static(path.join(__dirname, "../01_client/src")));
 
 // Define any additional API routes or middleware as needed
 app.get("/api/example", (req, res) => {
@@ -13,7 +13,7 @@ app.get("/api/example", (req, res) => {
 
 // All remaining requests return the React app, so it can handle routing
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+  res.sendFile(path.join(__dirname, "../01_client/src/index.js"));
 });
 
 app.listen(port, () => {
