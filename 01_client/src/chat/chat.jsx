@@ -1,16 +1,11 @@
 import { useState, useEffect } from "react";
 import { Box, Container } from "@chakra-ui/react";
 import supabase from "../supabaseClient";
+import userId from "../User_Id";
 
 export default function Chat() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-
-  let userId = document.cookie
-    .split(";")
-    .find((cookie) => cookie.includes("userId"));
-  userId = parseInt(userId.substring(userId.indexOf("=") + 1));
-  console.log(userId);
   useEffect(() => {
     async function fetchPostData() {
       try {
@@ -18,7 +13,6 @@ export default function Chat() {
         if (error) {
           throw new Error(error.message);
         }
-        console.log(data);
         setData(data);
       } catch (error) {
         setError(error.message);
