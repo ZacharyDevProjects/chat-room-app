@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Input } from "@chakra-ui/react";
-// import supabase from "../supabaseClient";
+import userId from "../User_Id";
+import supabase from "../supabaseClient";
 
 export default function footer() {
   const MessageInput = () => {
@@ -13,9 +14,18 @@ export default function footer() {
       }
     };
 
+    async function uploadMessage(message) {
+      const { error } = await supabase.from("post").insert({ message: message, user_post_ID: userId});
+      if (error) {
+        console.log("donnée évaporer");
+        console.log(error.message);
+      } else {
+        console.log("bien jouer");
+      }
+    }
     const sendMessage = () => {
       console.log("Message envoyé :", message);
-
+      uploadMessage(message)
       setMessage("");
     };
 
