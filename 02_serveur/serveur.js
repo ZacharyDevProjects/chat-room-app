@@ -2,8 +2,14 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
+const { createServer } = require("node:http");
+const { join } = require("node:path");
+const { Server } = require("socket.io");
+var cors = require("cors");
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
 
 const supabaseUrl = "https://xqdgtlvgwwfttuvaoaed.supabase.co";
 const supabaseKey =
@@ -55,23 +61,49 @@ async function generaterandomId() {
   return randomId;
 }
 
+const corsOptions = {
+  origin: "http://localhost:3000",
+  optionsSuccessStatus: 200,
+};
+
 app.use(cookieParser());
+app.use(cors(corsOptions));
+app.use(express.json());
 
-app.get("/", authenticate, function (req, res) {
-  // Si authenticate a été exécuté, on a accès au cookie
-  // et on peut choisir de servir le fichier index.html manuellement.
-  res.sendFile(path.join(__dirname, "../01_client/build", "index.html"));
+app.get("/chat", cors(corsOptions), async function (req, res) {
+  try {
+    const { data, error } = await supabase.from("post").select();
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Error fetching data from Supabase" });
+    }
+    return res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
-// Utiliser express.static pour les autres fichiers statiques
-app.use(express.static(path.join(__dirname, "../01_client/build")));
-
-// Cette route ne sera atteinte que si la requête ne correspond à aucune route précédente.
-// Elle sert le fichier index.html manuellement à partir du répertoire build.
-app.use(function (req, res) {
-  res.sendFile(path.join(__dirname, "../01_client/build", "index.html"));
+app.post("/post", async (req, res) => {
+  const receivedData = req.body.message;
+  const userId = req.body.userId;
+  console.log(`message: ${receivedData} \nuserID: ${userId}`);
+  const { error } = await supabase
+    .from("post")
+    .insert({ message: receivedData, user_post_ID: userId });
+  if (error) {
+    console.log("les données ne sont pas enregistrer");
+    console.log(error.message);
+  } else {
+    console.log("les données sont bien enregistrer");
+  }
 });
 
-app.listen(port, () => {
+io.on("connection", (socket) => {
+  console.log("a user connected");
+});
+
+server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

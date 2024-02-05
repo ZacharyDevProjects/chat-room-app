@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Container } from "@chakra-ui/react";
-import supabase from "../supabaseClient";
 import userId from "../User_Id";
 
 export default function Chat() {
@@ -9,13 +8,11 @@ export default function Chat() {
   useEffect(() => {
     async function fetchPostData() {
       try {
-        const { data, error } = await supabase.from("post").select();
-        if (error) {
-          throw new Error(error.message);
-        }
+        const response = await fetch("http://localhost:5000/chat")
+        const data = await response.json()
         setData(data);
       } catch (error) {
-        setError(error.message);
+        setError("pas de connexion");
       }
     }
     fetchPostData();

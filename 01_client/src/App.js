@@ -1,7 +1,7 @@
 import Header from "./layout/header";
 import Footer from "./layout/footer";
 import Chat from "./chat/chat";
-function App() {
+export default function App() {
   return (
     <>
       <Header />
@@ -10,5 +10,3 @@ function App() {
     </>
   );
 }
-
-export default App;
