@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
 import { Box, Container } from "@chakra-ui/react";
 import userId from "../../User_Id";
+import { socket } from "../../socket";
 
-export default function Chat() {
+socket.on("update", (arg) => {
+  console.log(arg);
+});
+
+const useChatData = (userId) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   useEffect(() => {
     async function fetchPostData() {
       try {
-        console.log(userId)
+        console.log(userId);
         const response = await fetch("http://localhost:5000/chat", {
           method: "post",
           headers: {
@@ -29,10 +34,16 @@ export default function Chat() {
       }
     }
     fetchPostData();
-  }, []);
+  }, [userId]);
+  return { data, error };
+};
+
+export default function Chat() {
+  const { data, error } = useChatData(userId);
+
   return (
     <Container maxW="600px" paddingBottom="20px">
-      <Box bg="white" p="5" overflow="auto" borderRadius="10px">
+      <Box id="messageBox" bg="white" p="5" overflow="auto" borderRadius="10px">
         {data ? (
           data.map((item, index) => (
             <Box
