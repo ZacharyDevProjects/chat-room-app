@@ -6,10 +6,10 @@ const { createServer } = require("node:http");
 const { join } = require("node:path");
 const { Server } = require("socket.io");
 var cors = require("cors");
+const { error } = require("console");
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
 
 const supabaseUrl = "https://xqdgtlvgwwfttuvaoaed.supabase.co";
 const supabaseKey =
@@ -17,21 +17,28 @@ const supabaseKey =
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const port = process.env.PORT || 5000;
+const corsOptions = {
+  origin: ["http://localhost:3000", "http://192.168.1.34:3000"],
+  optionsSuccessStatus: 200,
+};
 
-async function authenticate(req, res, next) {
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(cookieParser());
+
+async function authenticate(userIdFromCookie) {
   console.log("appelle de la fonciton authenticate");
-  const userIdFromCookie = await req.cookies.userId;
-  if (userIdFromCookie) {
+  if (userIdFromCookie !== undefined) {
     console.log("User ID found in cookie:", userIdFromCookie);
-    return next();
+    return true;
   } else {
-    console.log("User ID not found in cookie. Generating new ID...");
-    const userId = await generaterandomId();
-    res.cookie("userId", userId, {
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    });
-    console.log("New User ID set in cookie:", userId);
-    return next();
+    // console.log("User ID not found in cookie. Generating new ID...");
+    // const userId = await generaterandomId();
+    // res.cookie("userId", userId, {
+    //   expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    // });
+    // console.log("New User ID set in cookie:", userId);
+    return false;
   }
 }
 
@@ -61,24 +68,24 @@ async function generaterandomId() {
   return randomId;
 }
 
-const corsOptions = {
-  origin: "http://localhost:3000",
-  optionsSuccessStatus: 200,
-};
-
-app.use(cookieParser());
-app.use(cors(corsOptions));
-app.use(express.json());
-
-app.get("/chat", cors(corsOptions), async function (req, res) {
+app.post("/chat", async function (req, res) {
   try {
-    const { data, error } = await supabase.from("post").select();
-    if (error) {
+    const userId = req.body.userId;
+    const isAuthenticated = await authenticate(userId);
+    if (isAuthenticated) {
+      const { data, error } = await supabase.from("post").select();
+      if (error) {
+        return res.status(500).json({
+          error: `Error fetching data from Supabase`,
+        });
+      }
+      return res.json(data);
+    } else {
+      console.log("cookie setup");
       return res
         .status(500)
-        .json({ error: "Error fetching data from Supabase" });
+        .json({ error: "activer les cookies ou recharger la page svp" });
     }
-    return res.json(data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -100,8 +107,9 @@ app.post("/post", async (req, res) => {
   }
 });
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
+app.get("/definir-cookie", (req, res) => {
+  res.cookie("test", "maValeur", { path: "/" });
+  res.json("Cookie défini et envoyé au client");
 });
 
 server.listen(port, () => {

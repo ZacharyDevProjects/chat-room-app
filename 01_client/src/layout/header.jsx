@@ -1,10 +1,12 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
+import logo from "../img/images.png";
+
 
 export default function header() {
     return (
-  <Box display="Flex" bgColor="aqua" justifyContent="space-between" alignItems="Center">
-    <p>la je mettrai un logo</p>
-    <p>une belle histoire sur son point de depart</p>
+  <Box display="Flex" border={"1px solid"} justifyContent="space-between" alignItems="Center">
+    <Image src={logo} alt="Image" width={"2rem"} height={"auto"} />
+    <p>bienvenue sur un groupe chat</p>
     <p>la je mettrai le login</p>
   </Box>
     )

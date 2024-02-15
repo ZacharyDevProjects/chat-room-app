@@ -8,16 +8,29 @@ export default function Chat() {
   useEffect(() => {
     async function fetchPostData() {
       try {
-        const response = await fetch("http://localhost:5000/chat")
-        const data = await response.json()
-        setData(data);
+        console.log(userId)
+        const response = await fetch("http://localhost:5000/chat", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        });
+        if (response.status !== 500) {
+          const data = await response.json();
+          console.log(data);
+          setData(data);
+        } else {
+          const error = await response.json();
+          setError(error.error);
+        }
       } catch (error) {
-        setError("pas de connexion");
+        setError(error.message);
       }
     }
     fetchPostData();
   }, []);
-  
+
   return (
     <Container maxW="600px" paddingBottom="20px">
       <Box bg="white" p="5" overflow="auto" borderRadius="10px">
@@ -25,7 +38,9 @@ export default function Chat() {
           data.map((item, index) => (
             <Box
               key={index}
-              bgColor={data[index].user_post_ID === userId ? "#B7B7B7" : "#E5E5E5"}
+              bgColor={
+                data[index].user_post_ID === userId ? "#B7B7B7" : "#E5E5E5"
+              }
               mt={"20px"}
             >
               {data[index].message}

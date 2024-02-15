@@ -36,13 +36,13 @@ export default function footer() {
         height="20%"
         display="Flex"
         justifyContent="center"
-        bgColor="#2EFD3C"
+        bgColor="rgb(207, 202, 202)"
         alignItems="center"
       >
         <Input
           placeholder="text"
           width={"30rem"}
-          bgColor={"#2efd57"}
+          bgColor={"white"}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
