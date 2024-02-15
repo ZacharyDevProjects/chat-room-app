@@ -1,4 +1,3 @@
-console.log(document.cookie);
 let userId = document.cookie
   .split(";")
   .find((cookie) => cookie.includes("userID"));

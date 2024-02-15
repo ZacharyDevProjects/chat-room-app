@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Input } from "@chakra-ui/react";
 import userId from "../../User_Id";
+import { socket } from "../../socket";
 
 export default function footer() {
   const MessageInput = () => {
@@ -25,6 +26,7 @@ export default function footer() {
     const sendMessage = () => {
       console.log("Message envoyé :", message);
       fetchPostData(message, userId);
+      socket.emit("send", message)
       setMessage("");
     };
 

@@ -77,22 +77,22 @@ async function generaterandomId() {
 
 app.post("/chat", async function (req, res) {
   try {
-    const userId = req.body.userId;
-    const isAuthenticated = await authenticate(userId);
-    if (isAuthenticated) {
-      const { data, error } = await supabase.from("post").select();
-      if (error) {
-        return res.status(500).json({
-          error: `Error fetching data from Supabase`,
-        });
-      }
-      return res.json(data);
-    } else {
-      console.log("cookie setup");
-      return res
-        .status(500)
-        .json({ error: "activer les cookies ou recharger la page svp" });
+    // const userId = req.body.userId;
+    // const isAuthenticated = await authenticate(userId);
+    // if (isAuthenticated) {
+    const { data, error } = await supabase.from("post").select();
+    if (error) {
+      return res.status(500).json({
+        error: `Error fetching data from Supabase`,
+      });
     }
+    return res.json(data);
+    // } else {
+    // console.log("cookie setup");
+    // return res
+    //   .status(500)
+    //   .json({ error: "activer les cookies ou recharger la page svp" });
+    // }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -102,7 +102,7 @@ app.post("/chat", async function (req, res) {
 app.post("/post", async (req, res) => {
   const receivedData = req.body.message;
   const userId = req.body.userId;
-  console.log(`message: ${receivedData} \nuserID: ${userId}`);
+  // console.log(`message: ${receivedData} \nuserID: ${userId}`);
   const { error } = await supabase
     .from("post")
     .insert({ message: receivedData, user_post_ID: userId });
@@ -119,12 +119,11 @@ io.on("connection", (socket) => {
   console.log("a user connected");
   socket.emit("hello", "world");
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-
-  socket.on("howdy", (arg) => {
+  socket.on("disconnect", (arg) => {
     console.log(arg);
+  });
+  socket.on("send", (arg) => {
+    io.emit("update", arg);
   });
 });
 
