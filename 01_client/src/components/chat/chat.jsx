@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Container } from "@chakra-ui/react";
-import userId from "../User_Id";
+import userId from "../../User_Id";
 
 export default function Chat() {
   const [data, setData] = useState(null);
@@ -30,7 +30,6 @@ export default function Chat() {
     }
     fetchPostData();
   }, []);
-
   return (
     <Container maxW="600px" paddingBottom="20px">
       <Box bg="white" p="5" overflow="auto" borderRadius="10px">

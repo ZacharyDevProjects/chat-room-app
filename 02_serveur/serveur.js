@@ -10,6 +10,13 @@ const { error } = require("console");
 
 const app = express();
 const server = createServer(app);
+const io = new Server({
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.listen(server);
 
 const supabaseUrl = "https://xqdgtlvgwwfttuvaoaed.supabase.co";
 const supabaseKey =
@@ -107,9 +114,18 @@ app.post("/post", async (req, res) => {
   }
 });
 
-app.get("/definir-cookie", (req, res) => {
-  res.cookie("test", "maValeur", { path: "/" });
-  res.json("Cookie défini et envoyé au client");
+io.on("connection", (socket) => {
+  //send a message to the client
+  console.log("a user connected");
+  socket.emit("hello", "world");
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+
+  socket.on("howdy", (arg) => {
+    console.log(arg);
+  });
 });
 
 server.listen(port, () => {

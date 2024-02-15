@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Input } from "@chakra-ui/react";
-import userId from "../User_Id";
+import userId from "../../User_Id";
 
 export default function footer() {
   const MessageInput = () => {
