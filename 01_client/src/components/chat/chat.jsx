@@ -31,7 +31,8 @@ export default function Chat() {
         } catch (error) {
           setError(error.message);
         }
-      }
+        console.log(document.getElementById("messageBox").childElementCount)
+      }      
       fetchPostData();
       
       socket.on("update", fetchPostData);
