@@ -3,42 +3,45 @@ import { Box, Container } from "@chakra-ui/react";
 import userId from "../../User_Id";
 import { socket } from "../../socket";
 
-socket.on("update", (arg) => {
-  console.log(arg);
-});
 
-const useChatData = (userId) => {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  useEffect(() => {
-    async function fetchPostData() {
-      try {
-        console.log(userId);
-        const response = await fetch("http://localhost:5000/chat", {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId }),
-        });
-        if (response.status !== 500) {
-          const data = await response.json();
-          console.log(data);
-          setData(data);
-        } else {
-          const error = await response.json();
-          setError(error.error);
-        }
-      } catch (error) {
-        setError(error.message);
-      }
-    }
-    fetchPostData();
-  }, [userId]);
-  return { data, error };
-};
 
 export default function Chat() {
+
+  const useChatData = () => {
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+    useEffect(() => {
+      async function fetchPostData() {
+        try {
+          const response = await fetch("http://localhost:5000/chat", {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId }),
+          });
+          if (response.status !== 500) {
+            const data = await response.json();
+            console.log(data);
+            setData(data);
+          } else {
+            const error = await response.json();
+            setError(error.error);
+          }
+        } catch (error) {
+          setError(error.message);
+        }
+      }
+      fetchPostData();
+      
+      socket.on("update", fetchPostData);
+      
+    }, []);
+    
+    return { data, error };
+  };
+  
+
   const { data, error } = useChatData(userId);
 
   return (
@@ -55,7 +58,8 @@ export default function Chat() {
             >
               {data[index].message}
             </Box>
-          ))
+          )
+          )
         ) : (
           <p>{error ? `Erreur: ${error}` : "Chargement en cours..."}</p>
         )}

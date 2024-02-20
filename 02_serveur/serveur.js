@@ -12,7 +12,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server({
   cors: {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000"],
   },
 });
 
@@ -77,10 +77,14 @@ async function generaterandomId() {
 
 app.post("/chat", async function (req, res) {
   try {
+    res.cookie("moncookie", "mavaleur");
     // const userId = req.body.userId;
     // const isAuthenticated = await authenticate(userId);
     // if (isAuthenticated) {
-    const { data, error } = await supabase.from("post").select();
+    const { data, error } = await supabase
+      .from("post")
+      .select()
+      .order("id", { ascending: true });
     if (error) {
       return res.status(500).json({
         error: `Error fetching data from Supabase`,
