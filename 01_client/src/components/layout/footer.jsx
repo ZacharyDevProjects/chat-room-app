@@ -24,10 +24,12 @@ export default function footer() {
     }
 
     const sendMessage = () => {
-      console.log("Message envoyé :", message);
-      fetchPostData(message, userId);
-      socket.emit("send", message)
-      setMessage("");
+      if (message.length > 0) {
+        console.log("Message envoyé :", message);
+        fetchPostData(message, userId);
+        socket.emit("send", message)
+        setMessage("");
+      }
     };
 
     return (
