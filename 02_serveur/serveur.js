@@ -33,51 +33,8 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-async function authenticate(userIdFromCookie) {
-  console.log("appelle de la fonciton authenticate");
-  if (userIdFromCookie !== undefined) {
-    console.log("User ID found in cookie:", userIdFromCookie);
-    return true;
-  } else {
-    // console.log("User ID not found in cookie. Generating new ID...");
-    // const userId = await generaterandomId();
-    // res.cookie("userId", userId, {
-    //   expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    // });
-    // console.log("New User ID set in cookie:", userId);
-    return false;
-  }
-}
-
-async function generaterandomId() {
-  let isUnique = false;
-  let randomId;
-  while (!isUnique) {
-    randomId = Math.floor(Math.random() * 9000000 + 1000000);
-    const { data, error } = await supabase
-      .from("users")
-      .select("id")
-      .eq("id", randomId);
-    if (data.length === 0) {
-      isUnique = true;
-      console.log("ID is unique:", randomId);
-      const { error } = await supabase.from("users").insert({ id: randomId });
-      if (error) {
-        console.log("donnée évaporer");
-        console.log(error.message);
-      } else {
-        console.log("bien jouer");
-      }
-    } else {
-      console.log("ID is not unique. Generating a new one...");
-    }
-  }
-  return randomId;
-}
-
 app.post("/chat", async function (req, res) {
   try {
-    res.cookie("moncookie", "mavaleur");
     // const userId = req.body.userId;
     // const isAuthenticated = await authenticate(userId);
     // if (isAuthenticated) {
@@ -114,13 +71,13 @@ app.post("/post", async (req, res) => {
     console.log("les données ne sont pas enregistrer");
     console.log(error.message);
   } else {
-    console.log("les données sont bien enregistrer");
+    console.log(`message enregister: ${receivedData}`);
   }
 });
 
 io.on("connection", (socket) => {
+  console.log("salut user");
   //send a message to the client
-  console.log("a user connected");
   socket.emit("hello", "world");
 
   socket.on("disconnect", (arg) => {
