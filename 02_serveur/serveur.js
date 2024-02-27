@@ -35,9 +35,6 @@ app.use(cookieParser());
 
 app.post("/chat", async function (req, res) {
   try {
-    // const userId = req.body.userId;
-    // const isAuthenticated = await authenticate(userId);
-    // if (isAuthenticated) {
     const { data, error } = await supabase
       .from("post")
       .select()
@@ -48,12 +45,6 @@ app.post("/chat", async function (req, res) {
       });
     }
     return res.json(data);
-    // } else {
-    // console.log("cookie setup");
-    // return res
-    //   .status(500)
-    //   .json({ error: "activer les cookies ou recharger la page svp" });
-    // }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -63,7 +54,6 @@ app.post("/chat", async function (req, res) {
 app.post("/post", async (req, res) => {
   const receivedData = req.body.message;
   const userId = req.body.userId;
-  // console.log(`message: ${receivedData} \nuserID: ${userId}`);
   const { error } = await supabase
     .from("post")
     .insert({ message: receivedData, user_post_ID: userId });
