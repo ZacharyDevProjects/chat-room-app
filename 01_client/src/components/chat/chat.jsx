@@ -68,7 +68,7 @@ function Chat() {
         p="5"
         overflow="auto"
         borderRadius="10px"
-        key={data} // Add a key to the Box to trigger re-render when data changes
+        key={data}
       >
         {data ? (
           data.map((item, index) => (
