@@ -7,6 +7,7 @@ function Chat() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  
 
   async function fetchPostData() {
     try {
@@ -42,7 +43,7 @@ function Chat() {
 
 
   useEffect(() => {
-    const channelA = supabase
+     supabase
       .channel("schema-db-changes")
       .on(
         "postgres_changes",

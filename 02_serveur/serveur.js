@@ -4,19 +4,11 @@ const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
 const { createServer } = require("node:http");
 const { join } = require("node:path");
-const { Server } = require("socket.io");
 var cors = require("cors");
 const { error } = require("console");
 
 const app = express();
 const server = createServer(app);
-const io = new Server({
-  cors: {
-    origin: ["http://localhost:3000"],
-  },
-});
-
-io.listen(server);
 
 const supabaseUrl = "https://xqdgtlvgwwfttuvaoaed.supabase.co";
 const supabaseKey =
@@ -63,19 +55,6 @@ app.post("/post", async (req, res) => {
   } else {
     console.log(`message enregister: ${receivedData}`);
   }
-});
-
-io.on("connection", (socket) => {
-  console.log("salut user");
-  //send a message to the client
-  socket.emit("hello", "world");
-
-  socket.on("disconnect", (arg) => {
-    console.log(arg);
-  });
-  socket.on("send", (arg) => {
-    io.emit("update", arg);
-  });
 });
 
 server.listen(port, () => {

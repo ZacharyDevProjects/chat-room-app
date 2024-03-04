@@ -1,29 +1,34 @@
 import React from "react";
 import Header from "../src/components/layout/header";
 import Footer from "../src/components/layout/footer";
-import Chat from "../src/components/chat/chat";
-import LoginPage from "../src/components/login/loginPage";
-import { Route, Router } from "react-router-dom";
+import Chat from "./components/layout/chat";
+import LoginPage from "./components/login/loginPage";
+import SignInPage from "./components/SignIn/SignInPage";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-// const App = () => {
-//   return (
-//     <>
-//       <Header />
-//       <Chat />
-//       <Footer />
-//     </>
-//   );
-// };
-
-const App = () => {
+const HomePage = () => {
   return (
     <>
-      <Router>
-        <Route>
-          <LoginPage />
-        </Route>
-      </Router>
+      <Header />
+      <Chat />
+      <Footer />
     </>
   );
 };
+
+const App = () => {
+  return (
+    <ChakraProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signIn" element={<SignInPage />} />
+        </Routes>
+      </Router>
+    </ChakraProvider>
+  );
+};
+
 export default App;

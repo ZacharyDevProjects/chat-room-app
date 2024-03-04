@@ -12,24 +12,51 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const LoginPage = () => {
+function SignInPage() {
+  const navigate = useNavigate();
+
   const [show, setShow] = React.useState(false);
 
   const handleClick = () => setShow(!show);
+
+  const [showConfirmation, setshowConfirmation] = React.useState(false);
+
+  const handleClickConfirmation = () => setshowConfirmation(!showConfirmation);
 
   const [mailInput, setmailInput] = useState("");
 
   const handlemailInputChange = (e) => setmailInput(e.target.value);
 
-  const mailIsError = mailInput === "";
+  const mailRegex = /^[^\s@]+@[a-zA-Z]+(\.[a-z]{2,})$/;
+
+  const mailIsError = mailRegex.test(mailInput) === false || mailInput === "";
 
   const [passwordInput, setpasswordInput] = useState("");
 
   const handlepasswordInputChange = (e) => setpasswordInput(e.target.value);
 
-  const passwordIsError = passwordInput === "";
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,30}$/;
+
+  const passwordIsError =
+    passwordRegex.test(passwordInput) === false || passwordInput === "";
+
+  const [passwordConfirmationInput, setpasswordConfirmationInput] =
+    useState("");
+
+  const handlepasswordConfirmationInputChange = (e) =>
+    setpasswordConfirmationInput(e.target.value);
+
+  const passwordConfirmationIsError =
+    passwordConfirmationInput !== passwordInput ||
+    passwordConfirmationInput === "";
+
+  function buttonClicked() {
+    if (!mailIsError && !passwordIsError && !passwordConfirmationIsError) {
+        navigate("/");
+    }
+  }
 
   return (
     <Box
@@ -40,8 +67,7 @@ const LoginPage = () => {
       flexDirection={"column"}
     >
       <Container bgColor={"white"} centerContent>
-        <Heading marginY={"2rem"}>Login</Heading>
-        <Link to="/SignIn">Aller à la page de login</Link>
+        <Heading marginY={"2rem"}>Sign in</Heading>
         <FormControl isInvalid={mailIsError} maxW={"20rem"}>
           <FormLabel>Email</FormLabel>
           <Input
@@ -76,9 +102,32 @@ const LoginPage = () => {
             </InputRightElement>
           </InputGroup>
           {!passwordIsError ? (
-            <FormHelperText></FormHelperText>
+            <FormHelperText>tout est bon dans le cochon</FormHelperText>
           ) : (
             <FormErrorMessage>password is required.</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl isInvalid={passwordConfirmationIsError} maxW={"20rem"}>
+          <FormLabel>Password confiramtion</FormLabel>
+          <InputGroup>
+            <Input
+              type={showConfirmation ? "text" : "password"}
+              value={passwordConfirmationInput}
+              onChange={handlepasswordConfirmationInputChange}
+              maxW={"20rem"}
+              height="2.4rem"
+              fontSize={"16px"}
+            />
+            <InputRightElement height={"2.4rem"} width="4.5rem">
+              <Button h="1.75rem" size="sm" onClick={handleClickConfirmation}>
+                {showConfirmation ? "Hide" : "Show"}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+          {!passwordConfirmationIsError ? (
+            <FormHelperText></FormHelperText>
+          ) : (
+            <FormErrorMessage>password does not correspond</FormErrorMessage>
           )}
         </FormControl>
         <Button
@@ -87,12 +136,13 @@ const LoginPage = () => {
           borderRadius={"20px"}
           marginY={"2rem"}
           width={"21rem"}
+          onClick={buttonClicked}
         >
-          Login
+          Sign in
         </Button>
       </Container>
     </Box>
   );
-};
+}
 
-export default LoginPage;
+export default SignInPage;
