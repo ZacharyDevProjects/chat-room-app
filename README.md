@@ -19,8 +19,7 @@ Une application de chat en temps réel avec authentification sécurisée via coo
 
 ### Prérequis
 
-- Python 3.8 ou plus récent
-- PostgreSQL
+- node 
 
 ### Étapes d'Installation
 
