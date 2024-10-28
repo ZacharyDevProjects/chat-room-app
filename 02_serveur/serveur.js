@@ -1,11 +1,8 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
 const { createServer } = require("node:http");
-const { join } = require("node:path");
 var cors = require("cors");
-const { error } = require("console");
 
 const app = express();
 const server = createServer(app);
