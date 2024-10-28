@@ -29,7 +29,7 @@ Une application de chat en temps réel avec authentification sécurisée via coo
    cd chat-room-app
 2. **Installer les Dépendances**
    ```bash
-   pip install -r requirements.txt
+   npm i
 3. **Configurer les Variables d’Environnement**
    ```bash
    DATABASE_URL=your_db_url
