@@ -32,7 +32,8 @@ Une application de chat en temps réel avec authentification sécurisée via coo
    pip install -r requirements.txt
 3. **Configurer les Variables d’Environnement**
    ```bash
-   DATABASE_URL=your_postgresql_connection_string
+   DATABASE_URL=your_db_url
+   DATABASE_KEY=your_db_key
 
 4. **Démarrer l’Application**
    ```bash

@@ -7,8 +7,8 @@ var cors = require("cors");
 const app = express();
 const server = createServer(app);
 
-const supabaseUrl = "https://xqdgtlvgwwfttuvaoaed.supabase.co";
-const supabaseKey = process.env.API_KEY;
+const supabaseUrl = process.env.DATABASE_KEY;
+const supabaseKey = process.env.DATABASE_URL;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const port = process.env.PORT || 5000;
